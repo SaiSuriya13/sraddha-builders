@@ -1,0 +1,281 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark architectural palette — single source of truth. */
+  --brand-bg: 23 25 24;
+  --brand-surface: 29 33 31;
+  --brand-card: 34 39 36;
+  --brand-elevated: 43 49 45;
+  --brand-ink: 233 226 213;
+  --brand-secondary: 169 170 160;
+  --brand-muted: 119 125 118;
+  --brand-gold: 196 164 106;
+  --brand-bronze: 169 139 89;
+  --brand-line: 58 64 59;
+
+  --font-cormorant: "Cormorant Garamond", Georgia, serif;
+  --font-dm-sans: "DM Sans", system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: rgb(var(--brand-bg));
+  background-image: radial-gradient(
+    ellipse 90% 55% at 50% -10%,
+    rgb(var(--brand-gold) / 0.06),
+    transparent 70%
+  );
+  color: rgb(var(--brand-ink));
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: rgb(var(--brand-gold));
+  color: rgb(var(--brand-bg));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--brand-bg));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--brand-line));
+  border: 2px solid rgb(var(--brand-bg));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--brand-bronze));
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  input,
+  select,
+  textarea {
+    color-scheme: dark;
+  }
+
+  select option {
+    background-color: rgb(var(--brand-card));
+    color: rgb(var(--brand-ink));
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply font-sans text-[10px] uppercase tracking-[0.34em] text-brand-gold;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 border border-brand-gold bg-brand-gold px-7 py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-brand-bg transition-all duration-300 hover:border-brand-bronze hover:bg-brand-bronze;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border border-brand-line px-7 py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-brand-ink transition-all duration-300 hover:border-brand-gold hover:text-brand-gold;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center gap-2 border border-brand-gold bg-brand-gold px-7 py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-brand-bg transition-all duration-300 hover:border-brand-bronze hover:bg-brand-bronze;
+  }
+
+  .panel {
+    @apply border border-brand-line bg-brand-card;
+  }
+
+  .input-dark {
+    @apply w-full border border-brand-line bg-brand-surface px-4 py-3.5 text-sm text-brand-ink transition-colors placeholder:text-brand-muted/70 focus:border-brand-gold focus:outline-none;
+  }
+}
+
+/* Shared decorative surfaces — blueprint grid, hairlines and gold rules. */
+.blueprint-grid {
+  background-image: linear-gradient(
+      to right,
+      rgb(var(--brand-secondary) / 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgb(var(--brand-secondary) / 0.07) 1px,
+      transparent 1px
+    );
+  background-size: 88px 88px;
+}
+
+.blueprint-grid-fine {
+  background-image: linear-gradient(
+      to right,
+      rgb(var(--brand-secondary) / 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgb(var(--brand-secondary) / 0.055) 1px,
+      transparent 1px
+    );
+  background-size: 28px 28px;
+}
+
+.gold-rule {
+  background: linear-gradient(
+    to right,
+    rgb(var(--brand-gold)),
+    rgb(var(--brand-gold) / 0.15)
+  );
+}
+
+/* Animated architectural strokes used by the intro screen. */
+.sb-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: sbDraw 2.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes sbDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Static equivalent for reduced-motion users: the drawing appears complete. */
+.sb-drawn {
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+/* Accessible focus states */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid rgb(var(--brand-gold));
+  outline-offset: 3px;
+}
+
+/* The intro is server-rendered for first paint. Returning visitors in the same
+   session get the class below before the body paints, so they never see it. */
+.sb-intro-seen .sb-intro {
+  display: none !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .sb-draw {
+    stroke-dashoffset: 0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Print catalogue: A4, repeated table headers, no chrome or controls. The
+   catalogue is intentionally printed on white paper regardless of the dark
+   screen theme. */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+  }
+
+  .no-print,
+  .sb-intro,
+  header,
+  footer,
+  nav {
+    display: none !important;
+  }
+
+  .catalogue-page,
+  .catalogue-page * {
+    color: #111111 !important;
+    border-color: #c9c4ba !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .catalogue-page section {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .catalogue-page .print\:block {
+    display: block !important;
+  }
+
+  .catalogue-page h1,
+  .catalogue-page h2 {
+    color: #111111 !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-row-group;
+  }
+
+  tr,
+  .catalogue-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  table {
+    width: 100% !important;
+    font-size: 10pt;
+  }
+
+  a[href]::after {
+    content: "";
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
